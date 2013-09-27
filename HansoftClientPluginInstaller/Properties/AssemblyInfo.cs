@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("HansoftClientPluginInstaller")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Utility for installing Hansoft client plugins from the command line.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Hansoft AB")]
 [assembly: AssemblyProduct("HansoftClientPluginInstaller")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]

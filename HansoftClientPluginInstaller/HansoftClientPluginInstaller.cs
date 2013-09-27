@@ -29,7 +29,7 @@ namespace Hansoft.HansoftClientPluginInstaller
         static string x64PluginFileName;
         static string usage =
 @"Usage:
-HansoftClientPluginInstaller -c<server>:<port>:<database>:<sdk user>:<pwd> -p<file_x86>:<file_x64>
+HansoftClientPluginInstaller -c<server>:<port>:<database>:<sdk user>:<pwd> -i<plugin_name>:<file_x86>:<file_x64> | -u<plugin_name>
 
 This utility installs a Hansoft Client Plugin.
 
@@ -43,17 +43,13 @@ allowed in parameter values.
 <sdk user>     : Name of the Hansoft SDK User account
 <pwd>          : Password of the Hansoft SDK User account
 
--i Specifies the Hansoft client plugin to be installed
+-i Install the specified Hansoft client plugin
 <plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
-<file_x86>     : 
-<file_x64>    : 
+<file_x86>     :  The 32-bit version of the plugin
+<file_x64>     : The 64-bitr version of the plugin
 
--u Specifies the Hansoft client plugin to be uninstalled
+-u Uninstall the specified Hansoft client plugin
 <plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
-
-Example:
-
-TBD
 
 ";
 
@@ -72,7 +68,7 @@ TBD
                         {
                             SessionManager.Instance.Connect();
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             throw new ApplicationException("Could not connect to Hansoft Server with specified parameters.");
                         }
@@ -118,7 +114,7 @@ TBD
             {
                 tempFile = Path.GetTempFileName();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ApplicationException("Failed when calling: Path.GetTempFileName()");
             }
@@ -126,21 +122,23 @@ TBD
             {
                 SessionManager.Session.VersionControlInit(tempFile);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ApplicationException("Failed when calling: SessionManager.Session.VersionControlInit");
             }
-		    DeleteVersionControlFile("SDK/Plugins/" + pluginName);
+            if (uOptionFound)
+		        DeleteVersionControlFile("SDK/Plugins/" + pluginName, true);
 
             if (iOptionFound)
             {
+                DeleteVersionControlFile("SDK/Plugins/" + pluginName, false);
                 // Add plugins. You need both a x86 and x64 version built when you run the program. Both are required. If you create your own application make sure to use a directory for a reverse domain name that you own.
                 AddVersionControlFile("SDK/Plugins/" + pluginName + "/Win32/x86/Plugin.dll", x86PluginFileName);
                 AddVersionControlFile("SDK/Plugins/" + pluginName + "/Win32/x64/Plugin.dll", x64PluginFileName);
             }
         }
 
-        static void DeleteVersionControlFile(string hpmFileName)
+        static void DeleteVersionControlFile(string hpmFileName, bool logMessages)
 	    {
 		    HPMVersionControlDeleteFiles deleteFiles = new HPMVersionControlDeleteFiles();
 		    HPMVersionControlFileSpec fileSpec = new HPMVersionControlFileSpec();
@@ -151,8 +149,13 @@ TBD
 		    deleteFiles.m_bPermanent = true;
 		    deleteFiles.m_Comment =  "Delete of client plugin:" + pluginName;;
 		    HPMChangeCallbackData_VersionControlDeleteFilesResponse Response = SessionManager.Session.VersionControlDeleteFilesBlock(deleteFiles);
-		    if (Response.m_Errors.Length > 0)
-			    logger.Error("Error deleting version control file: " + Response.m_Errors[0].m_File + " Error: " + SessionManager.Session.VersionControlErrorToStr(Response.m_Errors[0].m_Error));
+            if (logMessages)
+            {
+                if (Response.m_Errors.Length > 0)
+                    logger.Error("Error deleting version control file: " + Response.m_Errors[0].m_File + " Error: " + SessionManager.Session.VersionControlErrorToStr(Response.m_Errors[0].m_Error));
+                else
+                    logger.Information("The version control file " + hpmFileName + " was deleted.");
+            }
 	    }
 
         static void AddVersionControlFile(string hpmFileName, string localFileName)
@@ -167,8 +170,10 @@ TBD
 		    addFiles.m_bDeleteSourceFiles = false;
 
 		    HPMChangeCallbackData_VersionControlAddFilesResponse Response = SessionManager.Session.VersionControlAddFilesBlock(addFiles);
-		    if (Response.m_Errors.Length > 0)
+            if (Response.m_Errors.Length > 0)
                 logger.Error("Error adding version control file: " + Response.m_Errors[0].m_File + " Error: " + SessionManager.Session.VersionControlErrorToStr(Response.m_Errors[0].m_Error));
+            else
+                logger.Information("The version control file " + hpmFileName + " was added.");
 	    }
 
         static bool ParseArguments(string[] args)
@@ -197,6 +202,10 @@ TBD
                         sdkUserPwd = pars[4];
                         break;
                     case "-i":
+                        if (iOptionFound)
+                            throw new ArgumentException("The -i option can only be specified once");
+                        if (uOptionFound)
+                            throw new ArgumentException("You can one of the -i and -u options");
                         if (pars.Length != 3)
                             throw new ArgumentException("The -i option was not specified correctly");
                         iOptionFound = true;
@@ -205,6 +214,10 @@ TBD
                         x64PluginFileName = pars[2];
                         break;
                     case "-u":
+                        if (uOptionFound)
+                            throw new ArgumentException("The -u option can only be specified once");
+                        if (iOptionFound)
+                            throw new ArgumentException("You can one of the -i and -u options");
                         if (pars.Length != 1)
                             throw new ArgumentException("The -u option was not specified correctly");
                         uOptionFound = true;
