@@ -35,27 +35,27 @@ and make sure that the Hansoft SDK DLL (e.g. HPMSdk.x86.dll) is in the same dire
 
 Usage
 -----
-HansoftClientPluginInstaller -c<server>:<port>:<database>:<sdk user>:<pwd> -i<plugin_name>:<file_x86>:<file_x64> | -u<plugin_name>
+	HansoftClientPluginInstaller -c<server>:<port>:<database>:<sdk user>:<pwd> -i<plugin_name>:<file_x86>:<file_x64> | -u<plugin_name>
 
-This utility installs a Hansoft Client Plugin.
+	This utility installs a Hansoft Client Plugin.
 
-If any parameter values contain spaces, then the parameter value in question need to be double quoted. Colons are not
-allowed in parameter values.
+	If any parameter values contain spaces, then the parameter value in question need to be double quoted. Colons are not
+	allowed in parameter values.
 
--c Specifies what hansoft database to connect to and the sdk user to be used
-<server>       : IP or DNS name of the Hansoft server
-<port>         : The listen port of the Hansoft server
-<database>     : Name of the Hansoft Database to get data from
-<sdk user>     : Name of the Hansoft SDK User account
-<pwd>          : Password of the Hansoft SDK User account
+	-c Specifies what hansoft database to connect to and the sdk user to be used
+	<server>       : IP or DNS name of the Hansoft server
+	<port>         : The listen port of the Hansoft server
+	<database>     : Name of the Hansoft Database to get data from
+	<sdk user>     : Name of the Hansoft SDK User account
+	<pwd>          : Password of the Hansoft SDK User account
 
--i Install the specified Hansoft client plugin
-<plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
-<file_x86>     :  The 32-bit version of the plugin
-<file_x64>     : The 64-bitr version of the plugin
+	-i Install the specified Hansoft client plugin
+	<plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
+	<file_x86>     :  The 32-bit version of the plugin
+	<file_x64>     : The 64-bitr version of the plugin
 
--u Uninstall the specified Hansoft client plugin
-<plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
+	-u Uninstall the specified Hansoft client plugin
+	<plugin_name>  : e.g. com.hansoft.safeextension.safeclientplugin
 
 
 
