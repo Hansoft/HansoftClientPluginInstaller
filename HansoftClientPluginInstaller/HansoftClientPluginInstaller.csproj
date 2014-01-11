@@ -35,12 +35,6 @@
     <Reference Include="HPMSdkManaged_4_5.x86">
       <HintPath>..\..\..\Projects\HansoftSDK_7_105\Win32\HPMSdkManaged_4_5.x86.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectWrapper">
-      <HintPath>..\..\..\Projects\Jean\Hansoft-Jean-Jean\bin\Release\ObjectWrapper.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleLogging">
-      <HintPath>..\..\..\Projects\Jean\Hansoft-Jean-Jean\bin\Release\SimpleLogging.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
